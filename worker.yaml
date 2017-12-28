@@ -1,0 +1,31 @@
+apiVersion: extensions/v1beta1
+kind: Deployment
+metadata:
+  name: example-app-worker
+spec:
+  replicas: 1
+  minReadySeconds: 30
+  strategy:
+    type: RollingUpdate
+    rollingUpdate:
+      maxSurge: 1
+      maxUnavailable: 1
+  template:
+    metadata:
+      labels:
+        app: example-app-worker
+    spec:
+      containers:
+      - name: example-app-web
+        image: gcr.io/scott-demo-project/example-app:latest
+        imagePullPolicy: Always
+        args: ['sidekiq', '-q', 'default']
+        resources:
+          requests:
+            memory: "1024Mi"
+        env:
+          - name: SECRET_KEY_BASE
+            valueFrom:
+              secretKeyRef:
+                name: production-secrets
+                key: SECRET_KEY_BASE

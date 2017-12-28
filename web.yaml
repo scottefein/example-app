@@ -1,0 +1,41 @@
+apiVersion: extensions/v1beta1
+kind: Deployment
+metadata:
+  name: example-app-web
+spec:
+  replicas: 1
+  minReadySeconds: 30
+  strategy:
+    type: RollingUpdate
+    rollingUpdate:
+      maxSurge: 1
+      maxUnavailable: 1
+  template:
+    metadata:
+      labels:
+        app: example-app-web
+    spec:
+      containers:
+      - name: example-app-web
+        image: gcr.io/scott-demo-project/example-app:latest
+        imagePullPolicy: Always
+        args: ['rails','s','-p','8080']
+        ports:
+        - containerPort: 8080
+        readinessProbe:
+          failureThreshold: 3
+          initialDelaySeconds: 30
+          periodSeconds: 10
+          successThreshold: 1
+          tcpSocket:
+            port: 8080
+          timeoutSeconds: 5
+        resources:
+          requests:
+            memory: "1024Mi"
+        env:
+          - name: SECRET_KEY_BASE
+            valueFrom:
+              secretKeyRef:
+                name: production-secrets
+                key: SECRET_KEY_BASE

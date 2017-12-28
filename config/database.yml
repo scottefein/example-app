@@ -17,8 +17,11 @@ development:
 # re-generated from your development database when you run "rake".
 # Do not set this db to the same as development or production.
 test:
-  <<: *default
-  database: db/test.sqlite3
+  adapter: postgresql
+  database: test
+  username: postgres 
+  host: <%= ENV['POSTGRES_PORT_5432_TCP_ADDR'] %> 
+  port: <%= ENV['POSTGRES_PORT_5432_TCP_PORT'] %>
 
 production:
   <<: *default

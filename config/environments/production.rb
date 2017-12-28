@@ -85,6 +85,8 @@ Rails.application.configure do
     logger.formatter = config.log_formatter
     config.logger    = ActiveSupport::TaggedLogging.new(logger)
   end
+  
+  ENV["REDIS_URL"] = ENV["REDIS_URL"] || "redis://#{ENV['REDIS_MASTER_SERVICE_HOST']}:#{ENV['REDIS_MASTER_SERVICE_PORT']}"
 
   # Do not dump schema after migrations.
   config.active_record.dump_schema_after_migration = false

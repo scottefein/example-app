@@ -1,0 +1,13 @@
+kind: Service
+apiVersion: v1
+metadata:
+  name: example-app-service
+  labels:
+    app: example-app-web
+spec:
+  type: NodePort
+  ports:
+    - port: 8080
+      nodePort: 30873
+  selector:
+    app: example-app-web
