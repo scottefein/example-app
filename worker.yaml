@@ -16,7 +16,7 @@ spec:
         app: example-app-worker
     spec:
       containers:
-      - name: example-app-web
+      - name: example-app-worker
         image: gcr.io/scott-demo-project/example-app:latest
         imagePullPolicy: Always
         args: ['sidekiq', '-q', 'default']

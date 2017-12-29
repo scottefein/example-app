@@ -15,11 +15,11 @@ steps:
     waitFor: ['migrateDb']
     id: testImage
   - name: 'gcr.io/cloud-builders/kubectl'
-    args: ['set','image','deployment/example-app-web','example-app=gcr.io/$PROJECT_ID/example-app:$SHORT_SHA']
+    args: ['set','image','deployment/example-app-web','example-app-web=gcr.io/$PROJECT_ID/example-app:$SHORT_SHA']
     env: ['CLOUDSDK_COMPUTE_ZONE=$_COMPUTE_ZONE_1','CLOUDSDK_CONTAINER_CLUSTER=$_CLUSTER_NAME']
     waitFor: ['testImage']
   - name: 'gcr.io/cloud-builders/kubectl'
-    args: ['set','image','deployment/example-app-worker','example-app=gcr.io/$PROJECT_ID/example-app:$SHORT_SHA']
+    args: ['set','image','deployment/example-app-worker','example-app-worker=gcr.io/$PROJECT_ID/example-app:$SHORT_SHA']
     env: ['CLOUDSDK_COMPUTE_ZONE=$_COMPUTE_ZONE_1','CLOUDSDK_CONTAINER_CLUSTER=$_CLUSTER_NAME']
     waitFor: ['testImage']
 images: ['gcr.io/$PROJECT_ID/example-app:latest']
