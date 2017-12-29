@@ -37,6 +37,8 @@ Rails.application.configure do
   # Print deprecation notices to the stderr.
   config.active_support.deprecation = :stderr
 
+  ENV["REDIS_URL"] = ENV["REDIS_URL"] || "redis://#{ENV['REDIS_PORT_6379_TCP_ADDR']}:#{ENV['REDIS_PORT_6379_TCP_PORT']}"
+
   # Raises error for missing translations
   # config.action_view.raise_on_missing_translations = true
 end
