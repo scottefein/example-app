@@ -1,22 +1,30 @@
 steps:
   - name: 'gcr.io/cloud-builders/docker'
-    args: [ 'build', '-t', 'gcr.io/$PROJECT_ID/example-app:latest', '.' ]
+    args: [ 'build', '-t', 'gcr.io/$PROJECT_ID/rails-test-image', '.' ]
     id: buildImage
   - name: 'gcr.io/$PROJECT_ID/docker-compose'
     args: ['build','app']
+    waitFor: ['buildImage']
+    id: buildCompose
   - name: 'gcr.io/$PROJECT_ID/docker-compose'
     args: ['run','app','rake','db:create','RAILS_ENV=test']
+    id: createDb
+    waitFor: ['buildCompose']
   - name: 'gcr.io/$PROJECT_ID/docker-compose'
     args: ['run','app','rake','db:migrate','RAILS_ENV=test']
+    id: migrateDb
+    waitFor: ['createDb']
   - name: 'gcr.io/$PROJECT_ID/docker-compose'
     args: ['run','app','rails','test','RAILS_ENV=test']
+    waitFor: ['migrateDb']
+    id: testImage
   - name: 'gcr.io/cloud-builders/kubectl'
     args: ['set','image','deployment/example-app-web','example-app=gcr.io/$PROJECT_ID/example-app:$SHORT_SHA']
     env: ['CLOUDSDK_COMPUTE_ZONE=$_COMPUTE_ZONE_1','CLOUDSDK_CONTAINER_CLUSTER=$_CLUSTER_NAME']
-    waitFor: ['buildImage']
+    waitFor: ['testImage']
   - name: 'gcr.io/cloud-builders/kubectl'
     args: ['set','image','deployment/example-app-worker','example-app=gcr.io/$PROJECT_ID/example-app:$SHORT_SHA']
     env: ['CLOUDSDK_COMPUTE_ZONE=$_COMPUTE_ZONE_1','CLOUDSDK_CONTAINER_CLUSTER=$_CLUSTER_NAME']
-    waitFor: ['buildImage']
+    waitFor: ['testImage']
 images: ['gcr.io/$PROJECT_ID/example-app:latest']
 
