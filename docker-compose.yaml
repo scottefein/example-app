@@ -1,5 +1,5 @@
 app:
-  build: .
+  image: example-app:latest
   command: rails server -p 3000 -b '0.0.0.0'
   volumes:
     - .:/app
