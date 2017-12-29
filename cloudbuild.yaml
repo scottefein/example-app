@@ -13,7 +13,7 @@ steps:
   - name: 'gcr.io/cloud-builders/kubectl'
     args: ['set','image','deployment/example-app-web','example-app=gcr.io/$PROJECT_ID/example-app:$SHORT_SHA']
     env: ['CLOUDSDK_COMPUTE_ZONE=$_COMPUTE_ZONE_1','CLOUDSDK_CONTAINER_CLUSTER=$_CLUSTER_NAME']
-   	waitFor: ['buildImage']
+    waitFor: ['buildImage']
   - name: 'gcr.io/cloud-builders/kubectl'
     args: ['set','image','deployment/example-app-worker','example-app=gcr.io/$PROJECT_ID/example-app:$SHORT_SHA']
     env: ['CLOUDSDK_COMPUTE_ZONE=$_COMPUTE_ZONE_1','CLOUDSDK_CONTAINER_CLUSTER=$_CLUSTER_NAME']
